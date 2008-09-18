@@ -6,23 +6,26 @@
 
 <script type="text/javascript" src="../scripts/scriptaculous/lib/prototype.js"></script>
 <script type="text/javascript" src="../scripts/scriptaculous/src/effects.js"></script>
+<script type="text/javascript" src="../scripts/moofx/moo.fx.js"></script>
+<script type="text/javascript" src="../scripts/moofx/accordion.js"></script>
 <script type="text/javascript" src="../scripts/lowpro.js"></script>
 <script type="text/javascript" src="../scripts/exercises/five.js"></script>
 
 <style type="text/css">
-  ul.accordian {
+  ul.accordion {
     border-bottom: 1px solid #ccc;
     list-style-type: none;
     width: 300px;
     padding: 0;
     margin: 0;
   }
-  ul.accordian h3 {
+
+  ul.accordion h3 {
     padding: 3px;
     margin: 0;
   }
 
-  ul.accordian > li {
+  ul.accordion > li {
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
@@ -31,18 +34,23 @@
     display: inline-block;
     width: 100%;
   }
-  ul.accordian ul {
+
+  ul.accordion ul {
     padding: 0;
     margin: 0;
     list-style-type: none;
   }
 
+  div.content {
+    padding-left: 10px;
+  }
+  
 </style>
 </head>
 
 <body>
 <div>
-	<ul class="accordian">
+	<ul class="accordion">
 		<li><h3>Verse 1</h3>
 			<div class="content">
 				<ul>
