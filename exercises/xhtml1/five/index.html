@@ -4,13 +4,47 @@
 <title>WDS8 | JavaScript Libraries - accordion menu</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
+<script type="text/javascript" src="../scripts/scriptaculous/lib/prototype.js"></script>
+<script type="text/javascript" src="../scripts/scriptaculous/src/effects.js"></script>
+<script type="text/javascript" src="../scripts/lowpro.js"></script>
+<script type="text/javascript" src="../scripts/exercises/five.js"></script>
+
+<style type="text/css">
+  ul.accordian {
+    border-bottom: 1px solid #ccc;
+    list-style-type: none;
+    width: 300px;
+    padding: 0;
+    margin: 0;
+  }
+  ul.accordian h3 {
+    padding: 3px;
+    margin: 0;
+  }
+
+  ul.accordian > li {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    width: 100%;
+  }
+  ul.accordian ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+</style>
 </head>
 
 <body>
 <div>
-	<ul>
+	<ul class="accordian">
 		<li><h3>Verse 1</h3>
-			<div>
+			<div class="content">
 				<ul>
 					<li>We're no strangers to love</li>
 					<li>You know the rules and so do I</li>
@@ -22,7 +56,7 @@
 			</div>
 		</li>
 		<li><h3>Verse 2</h3>
-			<div>
+			<div class="content">
 				<ul>
 					<li>We've know each other for so long</li>
 					<li>Your heart's been aching</li>
@@ -35,7 +69,7 @@
 			</div>
 		</li>
 		<li><h3>Verse 3</h3>
-			<div>
+			<div class="content">
 				<ul>
 					<li>Give you up, give you up</li>
 					<li>Give you up, give you up</li>
@@ -49,7 +83,7 @@
 			</div>
 		</li>
 		<li><h3>Chorus</h3>
-			<div>
+			<div class="content">
 				<ul>
 					<li>Never gonna give you up</li>
 					<li>Never gonna let you down</li>
