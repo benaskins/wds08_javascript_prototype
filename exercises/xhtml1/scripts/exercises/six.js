@@ -2,8 +2,7 @@ var SlideManager = Class.create({
   initialize: function() {
     this.isPresenting = true;
     this.currentSlide = 0;
-    this.slides       = $$('.slide');
-    this.totalSlides  = this.slides.size();
+    this.loadSlides();
     this.idAllSlides();
     this.createControls();
     this.scaleFonts();
@@ -13,10 +12,18 @@ var SlideManager = Class.create({
   },
 
   // Give every slide a unique id
-  idAllSlides: function() {
+  idAllSlides: function(reload) {
+    if (reload) {
+      this.loadSlides();
+    }
     this.slides.each( function(slide, index) {
       slide.writeAttribute("id", "slide" + index);
     })    
+  },
+
+  loadSlides: function() {
+    this.slides      = $$('.slide');
+    this.totalSlides = this.slides.size();    
   },
 
   // Create navigation controls 
@@ -142,24 +149,45 @@ var SlideManager = Class.create({
   },
   
   togglePresenter: function() {
-  	if (!this.slideCSS().disabled) {
+  	if (this.slideCSS().disabled) {
+  	  // Presenting
+  		this.outlineCSS().disabled = true;
+  		this.slideCSS().disabled   = false;
+  		this.isPresenting          = true;
+  		this.setFontSizes(this.presentingFontSize);
+      this.slides.each( function(slide) {
+        slide.style.visibility = "hidden";
+        // Reset styles left over by Scriptacolous Sortable
+        slide.style.position   = null;
+        slide.style.zIndex     = null;
+        slide.style.top        = null;
+        slide.style.left       = null;        
+      })
+      this.showCurrentSlide();
+      Sortable.destroy("slidecontainer");
+  	} else {
+  	  // Outline
   		this.slideCSS().disabled   = true;
   		this.outlineCSS().disabled = false;
   		this.isPresenting          = false;
       this.setFontSizes('1em');
       this.slides.each( function(slide) {
-        slide.setStyle("visibility", "visible");
+        slide.style.visibility = "visible";
       })
-  	} else {
-  		this.slideCSS().disabled   = false;
-  		this.outlineCSS().disabled = true;
-  		this.isPresenting          = true;
-  		this.setFontSizes(this.presentingFontSize);
-      this.slides.each( function(slide) {
-        slide.setStyle("visibility", "hidden");
-      })
-      this.showCurrentSlide();
+      this.enableSorting(this);
   	}
+  },
+
+  enableSorting: function(manager) {
+    Sortable.create(
+      "slidecontainer", 
+      {
+        tag: "div",
+        onChange: function(slide) {
+          manager.idAllSlides(true);
+        }
+      }
+    );
   },
   
   slideCSS: function() {
@@ -168,6 +196,25 @@ var SlideManager = Class.create({
   
   outlineCSS: function() {
     return $('outlineStyle');
+  },
+  
+  newSlide: function() {
+    $('slidecontainer').insert(
+       '<div class="slide"> \
+          <h1>[slide title]</h1> \
+          <ul> \
+            <li>[point one]</li> \
+            <li>[point two]</li> \
+            <li>[point three]</li> \
+            <li>[point four]</li> \
+            <li>[point five]</li> \
+          </ul> \
+          <div class="handout"> \
+            [any material that should appear in print but not on the slide] \
+          </div> \
+        </div>'    
+    );
+    this.idAllSlides(true);
   }
 
 })
@@ -180,7 +227,7 @@ document.observe('dom:loaded', function() {
 })
 
 Event.addBehavior({
-  'body:click': function(event) {
+  'html:click': function(event) {
     if (slideManager.isPresenting) {
       slideManager.nextSlide();      
     }
@@ -200,6 +247,10 @@ Event.addBehavior({
   },
   '#showoutline:click, #slideshow:click': function(event) {
     slideManager.togglePresenter();
+    return false;
+  },
+  '#newslide:click': function(event) {
+    slideManager.newSlide();
     return false;
   }
 
