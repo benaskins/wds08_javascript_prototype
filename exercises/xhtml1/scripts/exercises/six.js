@@ -21,13 +21,25 @@ var SlideManager = Class.create({
 
   // Create navigation controls 
   createControls: function() {
+    this.createNavigationControls();
+    this.createOutlineToolbar();
+  },
+  
+  createNavigationControls: function() {
     $('controls').insert('<form action="#" id="controlForm"> \
                       	    <div id="navLinks"> \
-                      	      <a accesskey="t" id="toggle">&#216;</a> \
+                      	      <a accesskey="t" id="showoutline">&#216;</a> \
                       	      <a accesskey="z" id="prev">&laquo;</a> \
                       	      <a accesskey="x" id="next">&raquo;</a> \
                       	    </div> \
                       	  </form>');
+  },
+
+  createOutlineToolbar: function() {
+    $('toolbar').insert('<ul id="actions"> \
+                      	   <li><a id="newslide" href="#">New Slide</a></li> \
+                      	   <li><a id="slideshow" href="#">Slide Show</a></li> \
+                      	 </ul>');
   },
   
   scaleFonts: function() {
@@ -37,12 +49,13 @@ var SlideManager = Class.create({
     	var vSize   = document.viewport.getHeight();
     	var hSize   = document.viewport.getWidth();
     	var newSize = Math.min(Math.round(vSize/vScale),Math.round(hSize/hScale));
-    	this.setFontSizes(newSize + 'px');
-    	if (Prototype.Browser.Gecko) {  // hack to counter incremental reflow bugs
-    		var body           = document.getElementsByTagName('body')[0];
-    		body.style.display = 'none';
-    		body.style.display = 'block';
-    	}
+    	this.presentingFontSize = newSize + 'px';
+    	this.setFontSizes(this.presentingFontSize);
+      if (Prototype.Browser.Gecko) {  // hack to counter incremental reflow bugs
+       var body           = document.getElementsByTagName('body')[0];
+       body.style.display = 'none';
+       body.style.display = 'block';
+      }
     }
   },
   
@@ -133,7 +146,7 @@ var SlideManager = Class.create({
   		this.slideCSS().disabled   = true;
   		this.outlineCSS().disabled = false;
   		this.isPresenting          = false;
-  		this.setFontSizes('1em');
+      this.setFontSizes('1em');
       this.slides.each( function(slide) {
         slide.setStyle("visibility", "visible");
       })
@@ -141,7 +154,7 @@ var SlideManager = Class.create({
   		this.slideCSS().disabled   = false;
   		this.outlineCSS().disabled = true;
   		this.isPresenting          = true;
-  		this.scaleFonts();
+  		this.setFontSizes(this.presentingFontSize);
       this.slides.each( function(slide) {
         slide.setStyle("visibility", "hidden");
       })
@@ -185,10 +198,8 @@ Event.addBehavior({
     }
     return false;
   },
-  '#toggle:click': function(event) {
-    if (slideManager.isPresenting) {
-      slideManager.togglePresenter();
-    }
+  '#showoutline:click, #slideshow:click': function(event) {
+    slideManager.togglePresenter();
     return false;
   }
 
