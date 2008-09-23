@@ -622,28 +622,29 @@ Ajax.InPlaceEditor = Class.create({
   handleFormSubmission: function(e) {
     var form = this._form;
     var value = $F(this._controls.editor);
-    this.prepareSubmission();
-    var params = this.options.callback(form, value) || '';
-    if (Object.isString(params))
-      params = params.toQueryParams();
-    params.editorId = this.element.id;
-    if (this.options.htmlResponse) {
-      var options = Object.extend({ evalScripts: true }, this.options.ajaxOptions);
-      Object.extend(options, {
-        parameters: params,
-        onComplete: this._boundWrapperHandler,
-        onFailure: this._boundFailureHandler
-      });
-      new Ajax.Updater({ success: this.element }, this.url, options);
-    } else {
-      var options = Object.extend({ method: 'get' }, this.options.ajaxOptions);
-      Object.extend(options, {
-        parameters: params,
-        onComplete: this._boundWrapperHandler,
-        onFailure: this._boundFailureHandler
-      });
-      new Ajax.Request(this.url, options);
-    }
+    this.fakeSubmission(value);
+    // this.prepareSubmission();
+    // var params = this.options.callback(form, value) || '';
+    // if (Object.isString(params))
+    //   params = params.toQueryParams();
+    // params.editorId = this.element.id;
+    // if (this.options.htmlResponse) {
+    //   var options = Object.extend({ evalScripts: true }, this.options.ajaxOptions);
+    //   Object.extend(options, {
+    //     parameters: params,
+    //     onComplete: this._boundWrapperHandler,
+    //     onFailure: this._boundFailureHandler
+    //   });
+    //   new Ajax.Updater({ success: this.element }, this.url, options);
+    // } else {
+    //   var options = Object.extend({ method: 'get' }, this.options.ajaxOptions);
+    //   Object.extend(options, {
+    //     parameters: params,
+    //     onComplete: this._boundWrapperHandler,
+    //     onFailure: this._boundFailureHandler
+    //   });
+    //   new Ajax.Request(this.url, options);
+    // }
     if (e) Event.stop(e);
   },
   leaveEditMode: function() {
@@ -746,6 +747,13 @@ Ajax.InPlaceEditor = Class.create({
     // Can't use triggerCallback due to backward compatibility: requires
     // binding + direct element
     this._boundComplete(transport, this.element);
+  },
+  fakeSubmission: function(value) {
+    this.leaveEditMode();
+    this.element.innerHTML = value;
+    // Can't use triggerCallback due to backward compatibility: requires
+    // binding + direct element
+    // this._boundComplete(transport, this.element);
   }
 });
 

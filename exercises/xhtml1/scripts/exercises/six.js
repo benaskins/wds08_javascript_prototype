@@ -163,7 +163,9 @@ var SlideManager = Class.create({
         slide.style.top        = null;
         slide.style.left       = null;        
       })
+      this.disableEditing();
       this.showCurrentSlide();
+      this.updateFooter();
       Sortable.destroy("slidecontainer");
   	} else {
   	  // Outline
@@ -175,6 +177,7 @@ var SlideManager = Class.create({
         slide.style.visibility = "visible";
       })
       this.enableSorting(this);
+      this.enableEditing();
   	}
   },
 
@@ -188,6 +191,20 @@ var SlideManager = Class.create({
         }
       }
     );
+  },
+
+  enableEditing: function() {
+    var editors = [];
+    $$(".slide h1, .slide h2, .slide h3, .slide h4, .slide li, .slide .handout").each( function(slide) {
+      editors.push(new Ajax.InPlaceEditor(slide, "/edit", {okControl: "link", cancelControl: false}));
+    });
+    this.editors = editors;
+  },
+  
+  disableEditing: function() {
+    this.editors.each( function(editor) {
+      editor.dispose();
+    });
   },
   
   slideCSS: function() {
@@ -215,6 +232,8 @@ var SlideManager = Class.create({
         </div>'    
     );
     this.idAllSlides(true);
+    this.disableEditing();
+    this.enableEditing();
   }
 
 })
@@ -253,6 +272,5 @@ Event.addBehavior({
     slideManager.newSlide();
     return false;
   }
-
 });
 
